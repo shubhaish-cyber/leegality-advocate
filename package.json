@@ -7,8 +7,8 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "tsx watch server/index.ts",
     "dev:client": "cd client && npx vite --port 5173",
-    "build": "cd client && vite build",
-    "start": "npm run build && npx prisma db push --skip-generate && tsx server/index.ts",
+    "build": "cd client && npm install && npx vite build",
+    "start": "npx prisma generate && npm run build && npx prisma db push && tsx server/index.ts",
     "db:push": "npx prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "npx prisma studio"
