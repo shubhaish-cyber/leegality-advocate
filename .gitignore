@@ -9,7 +9,6 @@ uploads/*
 !uploads/.gitkeep
 .env
 *.log
-.replit
 replit.nix
 .cache/
 .upm/
