@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="<%= title %>" />
+  <meta property="og:description" content="<%= description %>" />
+  <meta property="og:image" content="<%= mediaUrl %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:url" content="<%= ogUrl %>" />
+  <meta property="og:site_name" content="Leegality" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= title %>" />
+  <meta name="twitter:description" content="<%= description %>" />
+  <meta name="twitter:image" content="<%= mediaUrl %>" />
+  <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f0f4f8;
+      color: #0a2540;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    .header {
+      background: #0a2540;
+      padding: 16px 24px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .header span {
+      color: #8644F0;
+    }
+    .container {
+      max-width: 640px;
+      margin: 32px auto;
+      padding: 0 16px;
+      flex: 1;
+      width: 100%;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(10, 37, 64, 0.08);
+    }
+    .media-wrap img {
+      width: 100%;
+      display: block;
+    }
+    .media-wrap video {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+    .media-wrap .pdf-wrap {
+      background: #fef2f2;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .media-wrap .pdf-wrap svg {
+      width: 48px;
+      height: 48px;
+      color: #f87171;
+      margin-bottom: 12px;
+    }
+    .media-wrap .pdf-wrap .download-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 20px;
+      background: #8644F0;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .media-wrap .pdf-wrap .download-link:hover {
+      background: #7030d4;
+    }
+    .content {
+      padding: 24px;
+    }
+    .content p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #334e68;
+      white-space: pre-wrap;
+    }
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: #829ab1;
+    }
+    .footer a {
+      color: #8644F0;
+      text-decoration: none;
+    }
+    @media (max-width: 480px) {
+      .container { margin: 16px auto; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Leegality <span>Advocate</span></h1>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="media-wrap">
+        <% if (mediaType === 'video') { %>
+          <video controls>
+            <source src="<%= mediaUrl %>" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        <% } else if (mediaType === 'document') { %>
+          <div class="pdf-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <p style="font-size: 14px; color: #627d98; margin-bottom: 4px;">PDF Document</p>
+            <a href="<%= mediaUrl %>" target="_blank" rel="noopener noreferrer" class="download-link">
+              Download PDF
+            </a>
+          </div>
+        <% } else { %>
+          <img src="<%= mediaUrl %>" alt="<%= title %>" />
+        <% } %>
+      </div>
+      <div class="content">
+        <p><%= description %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Shared via <a href="#">Leegality Advocate</a>
+  </div>
+</body>
+</html>

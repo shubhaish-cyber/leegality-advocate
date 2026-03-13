@@ -1,0 +1,122 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model MarketingUser {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  googleId  String   @unique
+  role      String   @default("editor") // admin | editor
+  avatarUrl String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts         Post[]
+  inviteLinks   InviteLink[]
+  allowedEmails AllowedEmail[]
+}
+
+model SalesRep {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  linkedInId    String   @unique
+  accessToken   String // Encrypted
+  refreshToken  String?
+  tokenExpiry   DateTime
+  profilePicUrl String?
+  workEmail     String? // Organization email for Zoho Cliq @mentions
+  isActive      Boolean  @default(true)
+  onboardedVia  String? // invite link token or "manual"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  assignments PostAssignment[]
+}
+
+model Post {
+  id           String    @id @default(uuid())
+  caption      String
+  imageUrl     String // filename in uploads/ (used for all media types)
+  imageName    String // original filename
+  mediaType    String    @default("image") // image | video | document
+  mediaTitle   String?   // Title/headline for videos & documents on LinkedIn (max 400 chars)
+  campaignTag  String?
+  status       String    @default("draft") // draft | active | archived
+  scheduledFor DateTime?
+  deadline     DateTime?
+  createdById  String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  createdBy   MarketingUser  @relation(fields: [createdById], references: [id])
+  assignments PostAssignment[]
+}
+
+model PostAssignment {
+  id              String    @id @default(uuid())
+  postId          String
+  repId           String
+  status          String    @default("pending") // pending | posted | skipped
+  assignedAt      DateTime  @default(now())
+  postedAt        DateTime?
+  linkedInPostUrl String?
+  linkedInPostId  String?
+  skipReason      String?
+  skipNotes       String?
+  impressions     Int       @default(0)
+  reactions       Int       @default(0)
+  comments        Int       @default(0)
+  reshares        Int       @default(0)
+  statsUpdatedAt  DateTime?
+
+  post Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  rep  SalesRep @relation(fields: [repId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, repId])
+  @@index([repId, status])
+  @@index([postId])
+}
+
+model InviteLink {
+  id          String    @id @default(uuid())
+  token       String    @unique @default(uuid())
+  createdById String
+  isUsed      Boolean   @default(false)
+  isRevoked   Boolean   @default(false)
+  usedByEmail String?
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  createdBy MarketingUser @relation(fields: [createdById], references: [id])
+}
+
+model AllowedEmail {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  role      String   // "marketing" | "rep"
+  addedById String
+  createdAt DateTime @default(now())
+
+  addedBy MarketingUser @relation(fields: [addedById], references: [id])
+}
+
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
